@@ -25,25 +25,25 @@ const resumo = new Intl.NumberFormat("pt-BR", {
 
 ## Objetivos
 
-O catálogo reúne os 17 objetivos globais e o ODS 18, iniciativa brasileira pela igualdade étnico-racial. O ODS 1 já tem dados de execução e indicadores de pobreza.
+O catálogo reúne os 17 objetivos globais e o ODS 18, iniciativa brasileira pela igualdade étnico-racial.
 
 <ul class="ods-grid" aria-label="Objetivos de Desenvolvimento Sustentável">
-  <li><a href="./ods1.html"><img src="./assets/ods1.png" width="70" height="70" alt=""><strong>Erradicação da pobreza</strong><small>Dados disponíveis →</small></a></li>
-  <li><img src="./assets/ods2.png" width="70" height="70" alt=""><strong>Fome zero e agricultura sustentável</strong><small>Em preparação</small></li>
-  <li><img src="./assets/ods3.png" width="70" height="70" alt=""><strong>Saúde e bem-estar</strong><small>Em preparação</small></li>
-  <li><img src="./assets/ods4.png" width="70" height="70" alt=""><strong>Educação de qualidade</strong><small>Em preparação</small></li>
-  <li><img src="./assets/ods5.png" width="70" height="70" alt=""><strong>Igualdade de gênero</strong><small>Em preparação</small></li>
-  <li><img src="./assets/ods6.png" width="70" height="70" alt=""><strong>Água potável e saneamento</strong><small>Em preparação</small></li>
-  <li><img src="./assets/ods7.png" width="70" height="70" alt=""><strong>Energia limpa e acessível</strong><small>Em preparação</small></li>
-  <li><img src="./assets/ods8.png" width="70" height="70" alt=""><strong>Trabalho decente e crescimento econômico</strong><small>Em preparação</small></li>
-  <li><img src="./assets/ods9.png" width="70" height="70" alt=""><strong>Indústria, inovação e infraestrutura</strong><small>Em preparação</small></li>
-  <li><img src="./assets/ods10.png" width="70" height="70" alt=""><strong>Redução das desigualdades</strong><small>Em preparação</small></li>
-  <li><img src="./assets/ods11.png" width="70" height="70" alt=""><strong>Cidades e comunidades sustentáveis</strong><small>Em preparação</small></li>
-  <li><img src="./assets/ods12.png" width="70" height="70" alt=""><strong>Consumo e produção responsáveis</strong><small>Em preparação</small></li>
-  <li><img src="./assets/ods13.png" width="70" height="70" alt=""><strong>Ação contra a mudança global do clima</strong><small>Em preparação</small></li>
-  <li><img src="./assets/ods14.png" width="70" height="70" alt=""><strong>Vida na água</strong><small>Em preparação</small></li>
-  <li><img src="./assets/ods15.png" width="70" height="70" alt=""><strong>Vida terrestre</strong><small>Em preparação</small></li>
-  <li><img src="./assets/ods16.png" width="70" height="70" alt=""><strong>Paz, justiça e instituições eficazes</strong><small>Em preparação</small></li>
-  <li><img src="./assets/ods17.png" width="70" height="70" alt=""><strong>Parcerias e meios de implementação</strong><small>Em preparação</small></li>
-  <li><img src="./assets/ods18.png" width="70" height="70" alt=""><strong>Igualdade étnico-racial</strong><small>Brasil · em preparação</small></li>
+  <li><a href="./ods1.html"><img src="./assets/ods1.png" alt="ODS 1 — Erradicação da pobreza"></a></li>
+  <li><img src="./assets/ods2.png" alt="ODS 2 — Fome zero e agricultura sustentável"></li>
+  <li><img src="./assets/ods3.png" alt="ODS 3 — Saúde e bem-estar"></li>
+  <li><img src="./assets/ods4.png" alt="ODS 4 — Educação de qualidade"></li>
+  <li><img src="./assets/ods5.png" alt="ODS 5 — Igualdade de gênero"></li>
+  <li><img src="./assets/ods6.png" alt="ODS 6 — Água potável e saneamento"></li>
+  <li><img src="./assets/ods7.png" alt="ODS 7 — Energia limpa e acessível"></li>
+  <li><img src="./assets/ods8.png" alt="ODS 8 — Trabalho decente e crescimento econômico"></li>
+  <li><img src="./assets/ods9.png" alt="ODS 9 — Indústria, inovação e infraestrutura"></li>
+  <li><img src="./assets/ods10.png" alt="ODS 10 — Redução das desigualdades"></li>
+  <li><img src="./assets/ods11.png" alt="ODS 11 — Cidades e comunidades sustentáveis"></li>
+  <li><img src="./assets/ods12.png" alt="ODS 12 — Consumo e produção responsáveis"></li>
+  <li><img src="./assets/ods13.png" alt="ODS 13 — Ação contra a mudança global do clima"></li>
+  <li><img src="./assets/ods14.png" alt="ODS 14 — Vida na água"></li>
+  <li><img src="./assets/ods15.png" alt="ODS 15 — Vida terrestre"></li>
+  <li><img src="./assets/ods16.png" alt="ODS 16 — Paz, justiça e instituições eficazes"></li>
+  <li><img src="./assets/ods17.png" alt="ODS 17 — Parcerias e meios de implementação"></li>
+  <li><img src="./assets/ods18.png" alt="ODS 18 — Igualdade étnico-racial"></li>
 </ul>

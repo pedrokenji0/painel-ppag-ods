@@ -136,23 +136,17 @@
   list-style: none;
 }
 .ods-grid li {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  gap: .5rem;
+  box-sizing: border-box;
+  aspect-ratio: 1;
   min-width: 0;
-  padding: .85rem;
-  background: #fff;
+  overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 11px;
 }
-.ods-grid li:has(a) { border-color: #bd4056; background: #fff3f5; padding: 0; }
-.ods-grid a { display: flex; flex-direction: column; align-items: start; gap: .5rem; padding: .85rem; flex: 1; color: inherit; }
-.ods-grid a:hover { background: #ffeaee; border-radius: inherit; }
-.ods-grid img { object-fit: contain; object-position: left center; }
-.ods-grid strong { font-size: .85rem; line-height: 1.25; }
-.ods-grid small { margin-top: auto; color: #665d67; }
-.ods-grid a small { color: var(--accent); font-weight: 700; }
+.ods-grid a, .ods-grid img { display: block; width: 100%; height: 100%; }
+.ods-grid img { object-fit: cover; }
+.ods-grid a:hover img { filter: brightness(.94); }
+.ods-grid a:focus-visible { outline: 3px solid #fff; outline-offset: -6px; }
 
 @media (max-width: 650px) {
   .catalog-hero { grid-template-columns: 1fr; }
