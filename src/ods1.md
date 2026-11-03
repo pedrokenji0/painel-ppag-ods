@@ -26,6 +26,8 @@ const cor = "#c91f3c";
   <img src="./assets/ods1.png" width="224" height="224" alt="ODS 1 — Erradicação da pobreza">
 </section>
 
+<h2 id="filtros">Filtros da execução</h2>
+
 ```js
 const seletor = Inputs.radio(exercicios, {
   label: "Exercício",
@@ -37,7 +39,21 @@ const exercicio = view(seletor);
 ```
 
 ```js
-const programas = exercicio.programas.slice().sort((a, b) =>
+const grupos = ["Todos", ...new Set(exercicios.flatMap((e) => e.programas.map((d) => d.grupo)))];
+const seletorGrupo = Inputs.radio(grupos, {label: "Poder ou órgão", value: "Todos"});
+seletorGrupo.classList.add("periodos");
+const grupo = view(seletorGrupo);
+```
+
+```js
+const programasDoGrupo = exercicio.programas.filter((d) => grupo === "Todos" || d.grupo === grupo);
+const unidades = [...new Set(programasDoGrupo.map((d) => d.unidade))]
+  .sort((a, b) => a.localeCompare(b, "pt-BR"));
+const unidade = view(Inputs.select(["Todas", ...unidades], {label: "Unidade responsável"}));
+```
+
+```js
+const programas = programasDoGrupo.filter((d) => unidade === "Todas" || d.unidade === unidade).sort((a, b) =>
   (b.pago ?? -Infinity) - (a.pago ?? -Infinity) || Number(a.codigo) - Number(b.codigo));
 const comRegistro = programas.filter((d) => d.pago != null);
 const total = Object.fromEntries(etapas.map(([campo]) => [
@@ -80,7 +96,7 @@ const maiores = comRegistro.filter((d) => d.pago > 0).slice(0, 6);
 
 ## Programas
 
-Consulte todos os programas vinculados. A previsão é anual, enquanto a execução reflete o período disponível.
+A tabela segue os [filtros da execução](#filtros). A previsão é anual, enquanto a execução reflete o período disponível.
 
 ```js
 const busca = view(Inputs.text({label: "Buscar programa", placeholder: "Digite um código ou nome"}));
@@ -106,4 +122,4 @@ display(filtrados.length ? html`<div class="table-scroll" role="region" aria-lab
 display(html`<p>Execução orçamentária: <a href=${exercicio.fonte}>SIAFI-MG, exercício ${exercicio.ano}</a>. Vínculos temáticos e previsão: ${exercicio.vinculos}, base de referência fornecida para o projeto.</p>`);
 ```
 
-Valores nominais por código de programa e exercício. O pago corresponde ao campo **Valor Pago Orçamentário**. Cada programa entra uma vez no total, com seu valor integral. A associação ao ODS 1 é temática e pode coexistir com vínculos a outros ODS. O total não estima quanto foi aplicado exclusivamente para reduzir a pobreza.
+Valores nominais por código de programa e exercício. O pago corresponde ao campo **Valor Pago Orçamentário**. Cada programa entra uma vez no total, com seu valor integral. O filtro de poder ou órgão usa a unidade responsável no PPAG, conferida com as unidades executoras do SIAFI. A Defensoria Pública e seu fundo formam um grupo próprio. A associação ao ODS 1 é temática e pode coexistir com vínculos a outros ODS. O total não estima quanto foi aplicado exclusivamente para reduzir a pobreza.

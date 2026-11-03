@@ -26,6 +26,18 @@ BASES = {
         "a6ebbe98-59b6-498f-9e27-106b88995dcf",
     ),
 }
+# Unidades responsáveis no PPAG e executoras no SIAFI para o recorte do ODS 1.
+GRUPOS_POR_UO = {
+    **dict.fromkeys(
+        ("1191", "1221", "1231", "1481", "2161", "2371", "2421", "2441",
+         "3041", "3051", "4111", "4251", "4701", "5201"),
+        "Executivo",
+    ),
+    "1011": "Legislativo",
+    "1031": "Judiciário",
+    "1441": "Defensoria Pública",
+    "4741": "Defensoria Pública",
+}
 MEDIDAS = {
     "vlr_pago_orcamentario": "pago",
     "vlr_liquidado": "liquidado",
@@ -63,6 +75,7 @@ def ler_vinculos(arquivo, aba, ano):
         "Código do Programa": "codigo",
         "Nome do Programa": "nome",
         "Unidade Orçamentária Responsável pelo Programa": "unidade",
+        "Código da Unidade Orçamentária Responsável pelo Programa": "uo",
         f"Previsão Orçamentária {ano}": "previsto",
     }
     programas = dados.loc[ativos & ods1, list(colunas)].rename(columns=colunas)
@@ -72,21 +85,31 @@ def ler_vinculos(arquivo, aba, ano):
     programas = programas.drop_duplicates()
     if programas["codigo"].duplicated().any() or programas.isna().any().any():
         raise ValueError(f"Cadastro ou previsão ausente ou conflitante em {arquivo.name}")
+    programas["grupo"] = programas.pop("uo").map(GRUPOS_POR_UO)
+    if programas["grupo"].isna().any():
+        raise ValueError(f"Unidade responsável sem classificação em {arquivo.name}")
     programas["previsto"] = centavos(programas["previsto"])
     return programas
 
 
-def ler_execucao(arquivo, ano, codigos):
+def ler_execucao(arquivo, ano, programas):
+    grupos = programas.set_index("codigo")["grupo"]
     chaves = ["programa_cod", "mes_cod"]
     partes = []
     meses = set()
-    with pd.read_csv(arquivo, usecols=["ano", *chaves, *MEDIDAS], dtype="string", chunksize=200_000) as leitor:
+    with pd.read_csv(arquivo, usecols=["ano", "uo_cod", *chaves, *MEDIDAS], dtype="string", chunksize=200_000) as leitor:
         for lote in leitor:
             if not lote["ano"].eq(str(ano)).fillna(False).all():
                 raise ValueError(f"Exercício inesperado em {arquivo.name}")
             meses.update(lote["mes_cod"].unique())
             lote["programa_cod"] = lote["programa_cod"].str.strip().str.lstrip("0")
-            selecionados = lote.loc[lote["programa_cod"].isin(codigos), [*chaves, *MEDIDAS]].copy()
+            selecionados = lote.loc[lote["programa_cod"].isin(grupos.index)].copy()
+            grupo_executor = selecionados["uo_cod"].map(GRUPOS_POR_UO)
+            grupo_responsavel = selecionados["programa_cod"].map(grupos)
+            divergencias = selecionados.loc[~grupo_executor.eq(grupo_responsavel).fillna(False)]
+            if not divergencias.empty:
+                codigos = sorted(divergencias["uo_cod"].dropna().unique())
+                raise ValueError(f"Unidades executoras sem classificação compatível em {ano}: {codigos}")
             for medida in MEDIDAS:
                 selecionados[medida] = centavos(selecionados[medida])
             partes.append(selecionados.groupby(chaves)[list(MEDIDAS)].sum())
@@ -106,7 +129,7 @@ def preparar_execucao(origem, cache, atualizar):
         fonte = f"{PORTAL}/dataset/dados-armazem-siafi-{ano}/resource/{recurso}"
         url = f"{PORTAL}/dataset/{dataset}/resource/{recurso}/download/execucao.csv.gz"
         arquivo = obter(url, cache / f"execucao-{ano}.csv.gz", atualizar)
-        ultimo_mes, movimentos = ler_execucao(arquivo, ano, programas["codigo"])
+        ultimo_mes, movimentos = ler_execucao(arquivo, ano, programas)
         codigos = set(movimentos.index.get_level_values(0))
         registros = programas.to_dict('records')
         for programa in registros:
