@@ -1,0 +1,62 @@
+[
+  {
+    "meta": "3.8",
+    "nome": "Proporção da população atendida pela Estratégia de Saúde da Família"
+  },
+  {
+    "meta": "3.b",
+    "nome": "Cobertura vacinal de febre amarela em menores de 1 ano"
+  },
+  {
+    "meta": "3.8",
+    "nome": "Proporção de internações por condições sensíveis à atenção básica"
+  },
+  {
+    "meta": "3.8",
+    "nome": "Proporção de internações por doenças cérebro vasculares na população de 40 anos ou mais"
+  },
+  {
+    "meta": "3.4",
+    "nome": "Proporção de internações por diabetes mellitus e suas complicações na população de 30 anos ou mais"
+  },
+  {
+    "meta": "3.8",
+    "nome": "Proporção de internações por doenças relacionadas ao saneamento ambiental inadequado"
+  },
+  {
+    "meta": "3.8",
+    "nome": "Proporção de internações por doenças de veiculação hídrica"
+  },
+  {
+    "meta": "3.c",
+    "nome": "Número médio de médicos por 1.000 habitantes"
+  },
+  {
+    "meta": "3.8",
+    "nome": "Proporção de nascidos vivos cujas mães realizaram 7 ou mais consultas de pré-natal"
+  },
+  {
+    "meta": "3.8",
+    "nome": "Proporção de nascidos vivos com baixo peso"
+  },
+  {
+    "meta": "3.8",
+    "nome": "Proporção de óbitos por causas mal definidas"
+  },
+  {
+    "meta": "3.b",
+    "nome": "Cobertura vacinal de pentavalente em menores de 1 ano"
+  },
+  {
+    "meta": "3.b",
+    "nome": "Cobertura vacinal de poliomielite em menores de 1 ano"
+  },
+  {
+    "meta": "3.b",
+    "nome": "Cobertura vacinal de tríplice viral da população de 1 ano de idade"
+  },
+  {
+    "meta": "3.4",
+    "nome": "Taxa de mortalidade por doenças crônicas não transmissíveis na população de 30 a 69 anos"
+  }
+]

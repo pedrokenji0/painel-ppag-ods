@@ -1,0 +1,254 @@
+[
+  {
+    "meta": "1.3",
+    "nome": "Percentual de pessoas em situação de vulnerabilidade em função do acesso a água"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Proporção de beneficiários do BPC por mil habitantes"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Proporção de pessoas com deficiência beneficiárias do BPC por mil habitantes"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Proporção de pessoas idosas beneficiárias pelo BPC por mil habitantes"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Proporção de pessoas idosas beneficiárias do BPC por mil idosos"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de pessoas com deficiência beneficiárias do BPC"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de pessoas idosas beneficiárias do BPC"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de pessoas pertencentes às famílias beneficiárias do Bolsa Família"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de crianças ou adolescentes pobres ou extremamente pobres no Cadastro Único"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de pessoas com deficiência (18 a 64 anos) pobres ou extremamente pobres no Cadastro Único"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de pessoas com 65 anos e mais em relação à população em idade produtiva (15 a 64 anos) no Cadastro Único"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de pessoas com 65 anos e mais em relação à população em idade produtiva (15 a 64 anos) da população estimada"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de pessoas com idade de 18 anos ou mais e ensino fundamental incompleto e o total de pessoas com 18 anos ou mais, inscritas no Cadastro Único"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de pessoas com idade de 25 anos ou mais e ensino médio incompleto e o total de pessoas com 25 anos ou mais, inscritas no Cadastro Único"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Número de famílias com renda per capita até 1/2 salário mínimo"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Indicador de Desenvolvimento do Conselho Municipal de Assistência Social (IDConselho) normalizado"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Indicador de Desenvolvimento de Centros de Referência da Assistência Social (IDCRAS) médio normalizado"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Indicador de Desenvolvimento do Centro de Referência Especializado em Assistência Social (IDCREAS) normalizado"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de pessoas com idade igual ou acima de 65 anos, pobres ou extremamente pobres do Cadastro Único"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Índice de Gestão Descentralizada Municipal do Programa Bolsa Família (IGDM)"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Índice de Gestão Descentralizada do Sistema Único de Assistência Social"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Índice Municipal de Desenvolvimento dos Centros de Referência da Assistência Social (INDCRAS)"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Índice de proteção social básica"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Caracterização dos instrumentos legais que regulam a Assistência Social"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Número de Centros de Referência da Assistência Social cadastrados"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Número de Centros de Referência Especializada de Assistência Social (CREAS)"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Caracterização do órgão gestor de Assistência Social segundo sua hierarquia funcional"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Cobertura do Programa Bolsa Família para famílias cadastradas com renda per capita até 1/2 salário mínimo"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de pessoas de 15 anos ou mais de idade que não sabem ler e escrever e a população nessa faixa etária no Cadastro Único"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual da população no Cadastro Único"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de pessoas em idade produtiva (18 a 64 anos) e sem ocupação no Cadastro Único"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de pessoas em idade produtiva (18 a 64 anos) e sem ocupação do Cadastro Único"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de pessoas em idade produtiva (18 a 64 anos) pobres ou extremamente pobres no Cadastro Único"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de pessoas em idade produtiva (18 a 64 anos) sem ocupação pobres ou extremamente pobres no Cadastro Único"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de pessoas autodeclaradas indígenas no Cadastro Único"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual da população pobre ou extremamente pobre no Cadastro Único em relação a população inscrita no Cadastro Único"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual da população pobre ou extremamente pobre no Cadastro Único em relação a população total do município, com base na data de atualização do Cadastro Único"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual da população pobre ou extremamente pobre no Cadastro Único em relação a população total do município"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de pessoas autodeclaradas pardas ou pretas no Cadastro Único"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de indivíduos famílias residentes em área rural em relação ao total de famílias inscritas no Cadastro Único"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de famílias residentes em área rural"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Existência da Proteção Social Especial na estrutura administrativa do órgão gestor"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de pessoas em situação de vulnerabilidade pelas condições de saneamento básico"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Existência de regulamentação de programas, projetos e ações de Assistência Social"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Número de assistentes sociais atuando na Assistência Social"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de assistentes sociais atuando na Assistência Social em relação ao total de pessoal de nível superior"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Número de assistentes sociais e psicólogos ocupados na Assistência Social em relação à população inscrita no CadÚnico"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Número de funcionários com curso superior ocupados na Assistência Social"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Número de funcionários com ensino médio ocupados na Assistência Social"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Grau de instrução do pessoal ocupado na área de Assistência Social"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Número de funcionários com pós-graduação ocupados na Assistência Social"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Número de psicólogos atuando na Assistência Social"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de psicólogos atuando na Assistência Social em relação ao total de pessoal de nível superior"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Número de funcionários celetistas ocupados na assistência Social"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Número de funcionários estatutários ocupados na Assistência Social"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Número de funcionários da Assistência Social (com estagiário)"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Proporção de pessoal ocupado na área de Assistência Social por 10 mil habitantes"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Indicador de continuidade da política pública em função da forma de contrato de trabalho."
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual do pessoal estatutário ocupado na área de Assistência Social"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual do pessoal estatutário e celetista ocupado na área de Assistência Social"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de pessoas em situação de vulnerabilidade em função do tipo de escoamento sanitário"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual da população do Cadastro Único em situação de dificuldades de acesso por calçamento/pavimentação"
+  },
+  {
+    "meta": "1.3",
+    "nome": "Percentual de pessoas em situação de vulnerabilidade em função da destinação do lixo"
+  }
+]

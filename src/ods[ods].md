@@ -4,11 +4,13 @@ toc: false
 ---
 
 ```js
+import {ativarAbas} from "./abas.js";
 import * as Inputs from "@observablehq/inputs";
 import * as Plot from "@observablehq/plot";
 import {seletorUnidade} from "./filtros.js";
 import {painelSerie} from "./series.js";
 import {metasEstaduais, metasMunicipais} from "./saude.js";
+import {recortesMunicipais} from "./recortes-municipais.js";
 import {escolhaMunicipal, escolhaMeta, painelMunicipal} from "./municipal.js";
 
 const ods = observable.params.ods;
@@ -30,15 +32,22 @@ const icone = await FileAttachment(`./assets/ods${observable.params.ods}.png`).u
 display(html`<section class=${"hero ods" + ods + "-theme"}>
   <div><p class="eyebrow">MINAS GERAIS <span> / </span> ODS ${ods}</p>
   <h1>${objetivo}</h1>
-  <p>Execução orçamentária dos programas estaduais vinculados ao ODS ${ods}.</p>
-  <div class="hero-links">
-    <a class="primary" href="#programas">Ver gastos por programa</a>
-    <a href=${saude ? "#indicadores" : "./indicadores.html"}>${saude ? "Indicadores de saúde" : "Indicadores de pobreza"} →</a>
-    <a href=${saude ? "#mapa-municipal" : "./municipal1.html"}>Mapa municipal →</a>
-  </div></div>
+  <p>Programas estaduais, evolução dos indicadores e panorama dos municípios.</p></div>
   <img src=${icone} width="224" height="224" alt=${"ODS " + ods + " — " + objetivo}>
 </section>`);
 ```
+
+<div class="abas-ods" id="abas-ods" role="tablist" aria-label="Visões do ODS">
+  <button type="button" id="aba-orcamento" role="tab" aria-controls="orcamento" aria-selected="true">Programas e orçamento</button>
+  <button type="button" id="aba-indicadores" role="tab" aria-controls="indicadores" aria-selected="false" tabindex="-1">Série histórica</button>
+  <button type="button" id="aba-municipal" role="tab" aria-controls="mapa-municipal" aria-selected="false" tabindex="-1">Municípios</button>
+</div>
+
+```js
+ativarAbas(document.getElementById("abas-ods"), invalidation);
+```
+
+<section class="painel-ods" id="orcamento" role="tabpanel" aria-labelledby="aba-orcamento" tabindex="0">
 
 <h2 id="filtros">Filtros da execução</h2>
 
@@ -141,49 +150,80 @@ display(html`<p>A execução orçamentária vem do <a href=${exercicio.fonte}>SI
 
 Valores nominais por código de programa e exercício. O pago corresponde ao campo **Valor Pago Orçamentário**. Cada programa entra uma vez no total, com seu valor integral. O filtro de poder ou órgão usa a unidade responsável no PPAG, conferida com as unidades executoras do SIAFI. O vínculo é temático. Um mesmo programa pode estar associado a mais de um ODS, por isso a soma entre painéis pode contar o mesmo gasto mais de uma vez.
 
+</section>
+
+<section class="painel-ods" id="indicadores" role="tabpanel" aria-labelledby="aba-indicadores" tabindex="0" hidden>
+
+<h2 id="series-estaduais">Evolução em Minas Gerais e no Brasil</h2>
+
+As séries do IBGE/SIDRA permitem comparar os dois recortes pelos mesmos critérios.
+
 ```js
-if (saude) {
-  display(html`<h2 id="indicadores">Indicadores de saúde</h2>
-    <p>O mapa usa indicadores locais do CIS/FJP vinculados às metas pela revisão de 2026.
-    As séries do IBGE/SIDRA comparam Minas Gerais e Brasil.</p>
-    <h3 id="mapa-municipal">Mapa municipal de Minas Gerais</h3>
-    <p>Escolha uma meta, um indicador e um ano. Os indicadores municipais têm aderência B na revisão do CIS
-    e ajudam a acompanhar aspectos das <a href="https://brasil.un.org/pt-br/sdgs/3">metas do ODS 3</a>.</p>`);
+const series = await FileAttachment(`./data/series-ods${observable.params.ods}.json`).json();
+const metasHistoricas = saude ? metasEstaduais : [
+  {codigo: "1.1", titulo: "Pobreza extrema", indicadores: [
+    ["5817", "Pobreza pela linha internacional", "A linha internacional permite acompanhar a pobreza extrema ao longo do tempo."],
+    ["5840", "Pobreza entre pessoas ocupadas de 14 anos ou mais", "Mostra a pobreza abaixo da linha internacional entre pessoas que trabalham."]
+  ]},
+  {codigo: "1.2", titulo: "Pobreza pela linha nacional", indicadores: [
+    ["5877", "Pobreza pela linha nacional", "Acompanha a proporção da população abaixo da linha nacional de pobreza."]
+  ]}
+];
+for (const {codigo, titulo, indicadores} of metasHistoricas) {
+  display(html`<h3 class="meta-saude">Meta ${codigo} · ${titulo}</h3>`);
+  for (const [id, etiqueta, motivo] of indicadores) {
+    display(painelSerie(series.find((s) => s.id === id), etiqueta, cor, resize, motivo));
+  }
 }
 ```
 
+</section>
+
+<section class="painel-ods" id="mapa-municipal" role="tabpanel" aria-labelledby="aba-municipal" tabindex="0" hidden>
+
+## Mapa municipal de Minas Gerais
+
+Escolha a meta, o indicador e o ano. Os valores vêm do CIS/FJP e a cobertura varia de acordo com a série.
+
 ```js
-const municipal = saude ? await FileAttachment("./data/saude-municipal.json").json() : null;
-const malha = saude ? await FileAttachment("./data/malha-mg.json").json() : null;
-const metaMunicipal = saude ? view(escolhaMeta(metasMunicipais, metasMunicipais[1])) : null;
+const municipal = saude ? await FileAttachment("./data/saude-municipal.json").json() : await FileAttachment("./data/municipal-ods1.json").json();
+const malha = await FileAttachment("./data/malha-mg.json").json();
+const nucleo = await FileAttachment(`./data/nucleo-cis-ods${observable.params.ods}.json`).json();
+const chaveCIS = (nome) => normalizar(nome.trim().replace(/\s+/g, " "));
+const nomesMunicipais = new Set(Object.values(municipal.series).map((serie) => chaveCIS(serie.nome)));
+const fichasCIS = nucleo.map((ficha) => ({...ficha, incorporado: nomesMunicipais.has(chaveCIS(ficha.nome))}));
+const incorporados = fichasCIS.filter((ficha) => ficha.incorporado).length;
+display(html`<details class="inventario-cis">
+  <summary>Indicadores da planilha CIS · ${incorporados} de ${nucleo.length} no mapa</summary>
+  <p class="muted">Seleção da aba SELECAO NUCLEO. A situação mostra o que já tem série municipal incorporada ao painel.</p>
+  <div class="table-scroll" role="region" aria-label="Indicadores da planilha CIS" tabindex="0"><table>
+    <thead><tr><th scope="col">Meta</th><th scope="col">Indicador</th><th scope="col">Situação</th></tr></thead>
+    <tbody>${fichasCIS.map(({meta, nome, incorporado}) => html`<tr>
+      <td>${meta}</td><th scope="row">${nome}</th><td>${incorporado ? "No mapa" : "Pendente de incorporação"}</td>
+    </tr>`)}</tbody>
+  </table></div>
+</details>`);
 ```
 
 ```js
-const indicadorMunicipal = saude ? view(escolhaMunicipal(metaMunicipal.indicadores, "indicadores", "Indicador", {
+const metas = saude ? metasMunicipais : recortesMunicipais[1].metas;
+const metaMunicipal = view(escolhaMeta(metas, saude ? metas[1] : metas[0]));
+```
+
+```js
+const indicadorMunicipal = view(escolhaMunicipal(metaMunicipal.indicadores, "indicadores", "Indicador", {
   format: ([, nome]) => nome
-})) : null;
-```
-
-```js
-const serieMunicipal = saude ? municipal.series[indicadorMunicipal[0]] : null;
-const anoMunicipal = saude ? view(escolhaMunicipal(Object.keys(serieMunicipal.anos).sort().reverse(), "anos", "Ano")) : null;
-```
-
-```js
-if (saude) display(painelMunicipal(municipal, malha, serieMunicipal, indicadorMunicipal, anoMunicipal, resize, {
-  gradiente: "greens", escuro: cor
 }));
 ```
 
 ```js
-if (saude) {
-  const series = await FileAttachment("./data/series-ods3.json").json();
-  display(html`<h3 id="series-estaduais">Séries de Minas Gerais e Brasil</h3>`);
-  for (const {codigo, titulo, indicadores} of metasEstaduais) {
-    display(html`<h4 class="meta-saude">Meta ${codigo} · ${titulo}</h4>`);
-    for (const [id, etiqueta, motivo] of indicadores) {
-      display(painelSerie(series.find((s) => s.id === id), etiqueta, cor, resize, motivo));
-    }
-  }
-}
+const serieMunicipal = municipal.series[indicadorMunicipal[0]];
+const anoMunicipal = view(escolhaMunicipal(Object.keys(serieMunicipal.anos).sort().reverse(), "anos", "Ano"));
 ```
+
+```js
+display(painelMunicipal(municipal, malha, serieMunicipal, indicadorMunicipal, anoMunicipal, resize,
+  saude ? {gradiente: "greens", escuro: cor} : recortesMunicipais[1]));
+```
+
+</section>

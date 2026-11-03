@@ -34,7 +34,7 @@ export function painelSerie(serie, etiqueta, cor, resize, motivo) {
   }));
   return html`<section class="panel series-panel">
     <p class="eyebrow">INDICADOR ${serie.indicador} · ${anos[0]}–${anos.at(-1)}</p>
-    ${motivo ? html`<h5 class="series-title">${etiqueta}</h5>` : html`<h2 class="series-title">${etiqueta}</h2>`}
+    ${motivo ? html`<h4 class="series-title">${etiqueta}</h4>` : html`<h2 class="series-title">${etiqueta}</h2>`}
     <p class="muted">${serie.nome}${percentual ? "" : " · " + serie.unidade}</p>
     ${motivo ? html`<p><strong>Por que acompanhar?</strong> ${motivo}</p>` : null}
     ${legenda}${grafico}

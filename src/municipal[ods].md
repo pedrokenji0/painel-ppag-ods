@@ -46,5 +46,4 @@ const ano = view(escolhaMunicipal(Object.keys(serie.anos).sort().reverse(), "ano
 
 ```js
 display(painelMunicipal(municipal, malha, serie, indicador, ano, resize, recorte));
-if (ods === "1") display(html`<p><a href="./indicadores.html">Ver séries de pobreza de Minas Gerais e Brasil →</a></p>`);
 ```

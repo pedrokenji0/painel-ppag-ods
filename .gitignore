@@ -12,3 +12,4 @@ __pycache__/
 !/src/data/malha-mg.json
 !/src/data/saude-municipal.json
 !/src/data/municipal-ods*.json
+!/src/data/nucleo-cis-ods*.json
