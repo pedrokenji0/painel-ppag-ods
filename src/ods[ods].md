@@ -6,6 +6,7 @@ toc: false
 ```js
 import * as Inputs from "@observablehq/inputs";
 import * as Plot from "@observablehq/plot";
+import {seletorUnidade} from "./filtros.js";
 import {painelSerie} from "./series.js";
 import {escolhaMunicipal, metasEstaduais, metasMunicipais} from "./saude.js";
 
@@ -61,7 +62,7 @@ const grupo = view(seletorGrupo);
 const programasDoGrupo = exercicio.programas.filter((d) => grupo === "Todos" || d.grupo === grupo);
 const unidades = [...new Set(programasDoGrupo.map((d) => d.unidade))]
   .sort((a, b) => a.localeCompare(b, "pt-BR"));
-const unidade = view(Inputs.select(["Todas", ...unidades], {label: "Unidade responsável"}));
+const unidade = view(seletorUnidade(unidades, normalizar));
 ```
 
 ```js
