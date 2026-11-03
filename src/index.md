@@ -14,7 +14,7 @@ const resumo = new Intl.NumberFormat("pt-BR", {
 
 <section class="hero catalog-hero">
   <div><p class="eyebrow">MINAS GERAIS <span> / </span> AGENDA 2030</p>
-  <h1>Planejamento e<br>desenvolvimento sustentável</h1>
+  <h1>Planejamento e desenvolvimento sustentável</h1>
   <p>Explore os Objetivos de Desenvolvimento Sustentável e acompanhe a execução dos programas estaduais vinculados.</p>
   <div class="hero-links"><a class="primary" href="#objetivos">Explorar objetivos</a></div></div>
   <aside class="catalog-feature"><p class="eyebrow">PRIMEIRO PAINEL · ODS 1</p>

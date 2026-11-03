@@ -30,7 +30,7 @@
   --theme-foreground-focus: var(--accent);
 }
 #observablehq-main h2 { font-size: clamp(1.2rem, 2.8vw, 1.65rem); letter-spacing: -.025em; }
-.topbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.15rem 0; }
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .7rem 0; }
 .topbar .brand { color: var(--theme-foreground); font-size: 1.1rem; font-weight: 800; letter-spacing: -.035em; }
 .brand span { color: var(--accent); }
 .brand small { display: inline-block; margin-left: .5rem; font-size: .65rem; letter-spacing: .1em; color: var(--theme-foreground-muted); }
@@ -129,20 +129,32 @@
   .hero img { grid-row: 1; width: 84px; }
 }
 
-.catalog-hero h1 { font-size: clamp(2.05rem, 5vw, 4rem); }
+.catalog-hero {
+  gap: clamp(.75rem, 2.5vw, 2rem);
+  padding: clamp(.95rem, 2.5vw, 1.6rem);
+  margin: .25rem 0 1.15rem;
+}
+.catalog-hero h1 {
+  font-size: clamp(1.7rem, 3.2vw, 2.65rem);
+  line-height: 1.1;
+  margin: .25rem 0 .5rem;
+}
+.catalog-hero p { font-size: .98rem; }
+.catalog-hero .hero-links { margin-top: .75rem; }
+.catalog-hero .hero-links .primary { padding: .5rem .75rem; }
 .catalog-feature {
   max-width: 250px;
-  padding: 1.15rem;
+  padding: .85rem;
   background: #ffffff12;
   border: 1px solid #ffffff40;
   border-radius: 13px;
 }
-.catalog-feature strong { display: block; font-size: clamp(1.55rem, 3.5vw, 2.4rem); letter-spacing: -.045em; }
+.catalog-feature strong { display: block; font-size: clamp(1.4rem, 2.7vw, 1.9rem); letter-spacing: -.045em; }
 .catalog-feature p { margin: .25rem 0 .7rem; font-size: .92rem; }
 .catalog-feature a { color: #fff; font-size: .85rem; font-weight: 700; text-decoration: underline; }
 .ods-grid {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: .7rem;
   padding: 0;
   list-style: none;
@@ -165,11 +177,8 @@
   .catalog-feature { max-width: none; }
 }
 @media (max-width: 1000px) {
-  .ods-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-}
-@media (max-width: 700px) {
   .ods-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
-@media (max-width: 480px) {
+@media (max-width: 700px) {
   .ods-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
