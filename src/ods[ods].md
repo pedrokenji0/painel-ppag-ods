@@ -28,7 +28,7 @@ const cor = saude ? "#377e37" : "#c91f3c";
 const icone = await FileAttachment(`./assets/ods${observable.params.ods}.png`).url();
 display(html`<section class=${"hero ods" + ods + "-theme"}>
   <div><p class="eyebrow">MINAS GERAIS <span> / </span> ODS ${ods}</p>
-  <h1>${saude ? objetivo : html`Erradicação<br>da pobreza`}</h1>
+  <h1>${objetivo}</h1>
   <p>Execução orçamentária dos programas estaduais vinculados ao ODS ${ods}.</p>
   <div class="hero-links">
     <a class="primary" href="#programas">Ver gastos por programa</a>
@@ -92,9 +92,11 @@ const maiores = comRegistro.filter((d) => d.pago > 0).slice(0, 6);
   <section class="panel">
     <p class="eyebrow">EXECUÇÃO</p><h2>Pagamentos por mês</h2>
     ${comRegistro.length ? resize((width) => Plot.plot({
-      width, height: 270, marginLeft: 83,
+      width, height: 270, marginLeft: width < 450 ? 78 : 88,
+      style: {fontFamily: "var(--sans-serif)", fontSize: 13},
       ariaLabel: "Valor pago por mês",
-      x: {domain: pontos.map((d) => d.mes), label: null},
+      x: {domain: pontos.map((d) => d.mes), label: null,
+        ticks: width < 450 ? pontos.filter((_, i) => i % 2 === 0).map((d) => d.mes) : undefined},
       y: {label: null, grid: true, tickFormat: moedaCurta},
       marks: [Plot.ruleY([0]), Plot.barY(pontos, {x: "mes", y: "pago", fill: cor, tip: true, title: (d) => moeda(d.pago)})]
     })) : html`<p class="muted">Sem registros no SIAFI-MG para este recorte.</p>`}
@@ -190,9 +192,13 @@ if (saude) {
       · <span class="mapa-sem-dado" aria-hidden="true"></span> Cinza indica ausência de dado.</p>
     ${resize((width) => Plot.plot({
       width, height: Math.min(490, width * 0.83), margin: 6,
+      style: {fontFamily: "var(--sans-serif)", fontSize: 13},
       ariaLabel: `${etiqueta} por município de Minas Gerais em ${anoMunicipal}`,
       projection: {type: "mercator", domain: malha},
-      color: {type: "linear", scheme: "greens", domain: [0, maximo], unknown: "#dbe3eb", legend: true, label: unidade},
+      color: {
+        type: "linear", scheme: "greens", domain: [0, maximo], unknown: "#dbe3eb", legend: true, label: unidade,
+        style: {fontFamily: "var(--sans-serif)", fontSize: 13}, height: 56, marginTop: 24, marginLeft: 12, marginRight: 18
+      },
       marks: [Plot.geo(malha, {
         fill: (d) => valores[d.properties.codarea] ?? NaN,
         stroke: "#fff", strokeWidth: 0.45,

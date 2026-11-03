@@ -20,9 +20,10 @@ export function painelSerie(serie, etiqueta, cor, resize, motivo) {
     <li>${ultimo ?? "Sem ano comum"}</li>
   </ul>`;
   const grafico = resize((width) => Plot.plot({
-    width, height: 275, marginLeft: 50,
+    width, height: 275, marginLeft: 57,
+    style: {fontFamily: "var(--sans-serif)", fontSize: 13},
     ariaLabel: serie.nome + " em Minas Gerais e no Brasil",
-    x: {label: null, tickFormat: String, ticks: width < 560 ? 5 : anos},
+    x: {label: null, tickFormat: String, ticks: width < 380 ? 4 : width < 700 ? 6 : anos},
     y: {label: percentual ? "%" : null, grid: true, zero: true},
     color: {domain: territorios, range: cores},
     marks: [
@@ -33,7 +34,7 @@ export function painelSerie(serie, etiqueta, cor, resize, motivo) {
   }));
   return html`<section class="panel series-panel">
     <p class="eyebrow">INDICADOR ${serie.indicador} · ${anos[0]}–${anos.at(-1)}</p>
-    <h2>${etiqueta}</h2>
+    ${motivo ? html`<h5 class="series-title">${etiqueta}</h5>` : html`<h2 class="series-title">${etiqueta}</h2>`}
     <p class="muted">${serie.nome}${percentual ? "" : " · " + serie.unidade}</p>
     ${motivo ? html`<p><strong>Por que acompanhar?</strong> ${motivo}</p>` : null}
     ${legenda}${grafico}
