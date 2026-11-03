@@ -6,5 +6,6 @@ __pycache__/
 .dados/
 /src/data/*
 !/src/data/execucao-ods1.json
+!/src/data/execucao-ods3.json
 !/src/data/series-ods1.json
 !/src/data/series-ods3.json

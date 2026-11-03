@@ -6,8 +6,12 @@ toc: false
 ```js
 import * as Inputs from "@observablehq/inputs";
 import * as Plot from "@observablehq/plot";
+import {painelSerie} from "./series.js";
 
-const exercicios = await FileAttachment("./data/execucao-ods1.json").json();
+const ods = observable.params.ods;
+const saude = ods === "3";
+const objetivo = saude ? "Saúde e bem-estar" : "Erradicação da pobreza";
+const exercicios = await FileAttachment(`./data/execucao-ods${observable.params.ods}.json`).json();
 const brl = new Intl.NumberFormat("pt-BR", {style: "currency", currency: "BRL"});
 const compacto = new Intl.NumberFormat("pt-BR", {style: "currency", currency: "BRL", notation: "compact", maximumFractionDigits: 1});
 const moeda = (valor) => valor == null ? "Sem registro" : brl.format(valor / 100);
@@ -15,16 +19,22 @@ const moedaCurta = (valor) => compacto.format(valor / 100);
 const meses = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
 const etapas = [["pago", "Pago"], ["liquidado", "Liquidado"], ["empenhado", "Empenhado"]];
 const normalizar = (texto) => texto.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
-const cor = "#c91f3c";
+const cor = saude ? "#377e37" : "#c91f3c";
 ```
 
-<section class="hero ods1-theme">
-  <div><p class="eyebrow">MINAS GERAIS <span> / </span> AGENDA 2030</p>
-  <h1>Erradicação<br>da pobreza</h1>
-  <p>Execução orçamentária dos programas estaduais vinculados ao ODS 1.</p>
-  <div class="hero-links"><a class="primary" href="#programas">Ver gastos por programa</a><a href="./indicadores">Indicadores de pobreza →</a></div></div>
-  <img src="./assets/ods1.png" width="224" height="224" alt="ODS 1 — Erradicação da pobreza">
-</section>
+```js
+const icone = await FileAttachment(`./assets/ods${observable.params.ods}.png`).url();
+display(html`<section class=${"hero ods" + ods + "-theme"}>
+  <div><p class="eyebrow">MINAS GERAIS <span> / </span> ODS ${ods}</p>
+  <h1>${saude ? objetivo : html`Erradicação<br>da pobreza`}</h1>
+  <p>Execução orçamentária dos programas estaduais vinculados ao ODS ${ods}.</p>
+  <div class="hero-links">
+    <a class="primary" href="#programas">Ver gastos por programa</a>
+    <a href=${saude ? "#indicadores" : "./indicadores.html"}>${saude ? "Indicadores de saúde" : "Indicadores de pobreza"} →</a>
+  </div></div>
+  <img src=${icone} width="224" height="224" alt=${"ODS " + ods + " — " + objetivo}>
+</section>`);
+```
 
 <h2 id="filtros">Filtros da execução</h2>
 
@@ -57,8 +67,9 @@ const programas = programasDoGrupo.filter((d) => unidade === "Todas" || d.unidad
   (b.pago ?? -Infinity) - (a.pago ?? -Infinity) || Number(a.codigo) - Number(b.codigo));
 const comRegistro = programas.filter((d) => d.pago != null);
 const total = Object.fromEntries(etapas.map(([campo]) => [
-  campo, comRegistro.reduce((soma, d) => soma + d[campo], 0)
+  campo, comRegistro.length ? comRegistro.reduce((soma, d) => soma + d[campo], 0) : null
 ]));
+const previsto = programas.reduce((soma, d) => soma + d.previsto, 0);
 const porMes = Array(exercicio.ultimoMes).fill(0);
 for (const programa of comRegistro) {
   for (const {mes, pago} of programa.meses) porMes[mes - 1] += pago;
@@ -72,25 +83,25 @@ const maiores = comRegistro.filter((d) => d.pago > 0).slice(0, 6);
   <section class="metric"><span>Valor liquidado</span><strong>${moeda(total.liquidado)}</strong><small>Despesas reconhecidas</small></section>
   <section class="metric"><span>Valor empenhado</span><strong>${moeda(total.empenhado)}</strong><small>Compromissos assumidos</small></section>
 </div>
-<p class="coverage"><strong>${programas.length} programas vinculados</strong> · ${comRegistro.length} com registros no SIAFI-MG. O total soma os pagamentos do exercício, sem os restos a pagar de anos anteriores.</p>
+<p class="coverage"><strong>${programas.length} programas vinculados</strong> · ${comRegistro.length} com registros no SIAFI-MG · Previsão anual do PPAG <strong>${moeda(previsto)}</strong>. O total soma os pagamentos do exercício, sem os restos a pagar de anos anteriores.</p>
 
 <div class="overview">
   <section class="panel">
     <p class="eyebrow">EXECUÇÃO</p><h2>Pagamentos por mês</h2>
-    ${resize((width) => Plot.plot({
+    ${comRegistro.length ? resize((width) => Plot.plot({
       width, height: 270, marginLeft: 83,
       ariaLabel: "Valor pago por mês",
       x: {domain: pontos.map((d) => d.mes), label: null},
       y: {label: null, grid: true, tickFormat: moedaCurta},
       marks: [Plot.ruleY([0]), Plot.barY(pontos, {x: "mes", y: "pago", fill: cor, tip: true, title: (d) => moeda(d.pago)})]
-    }))}
+    })) : html`<p class="muted">Sem registros no SIAFI-MG para este recorte.</p>`}
   </section>
   <section class="panel">
     <p class="eyebrow">RANKING</p><h2>Maiores pagamentos</h2>
-    ${html`<ol class="ranking">${maiores.map((d) => html`<li>
+    ${maiores.length ? html`<ol class="ranking">${maiores.map((d) => html`<li>
       <span class="program-name"><small>${d.codigo}</small> ${d.nome}</span><strong>${moedaCurta(d.pago)}</strong>
       <div class="rank-track"><span style=${{width: (100 * d.pago / maiores[0].pago) + "%"}}></span></div>
-    </li>`)}</ol>`}
+    </li>`)}</ol>` : html`<p class="muted">Nenhum pagamento positivo para este recorte.</p>`}
   </section>
 </div>
 
@@ -119,7 +130,24 @@ display(filtrados.length ? html`<div class="table-scroll" role="region" aria-lab
 ## Fontes e critérios
 
 ```js
-display(html`<p>Execução orçamentária: <a href=${exercicio.fonte}>SIAFI-MG, exercício ${exercicio.ano}</a>. Vínculos temáticos e previsão: ${exercicio.vinculos}, base de referência fornecida para o projeto.</p>`);
+display(html`<p>A execução orçamentária vem do <a href=${exercicio.fonte}>SIAFI-MG, exercício ${exercicio.ano}</a>. Os vínculos temáticos e a previsão vêm da base de referência ${exercicio.vinculos}.</p>`);
 ```
 
-Valores nominais por código de programa e exercício. O pago corresponde ao campo **Valor Pago Orçamentário**. Cada programa entra uma vez no total, com seu valor integral. O filtro de poder ou órgão usa a unidade responsável no PPAG, conferida com as unidades executoras do SIAFI. A Defensoria Pública e seu fundo formam um grupo próprio. A associação ao ODS 1 é temática e pode coexistir com vínculos a outros ODS. O total não estima quanto foi aplicado exclusivamente para reduzir a pobreza.
+Valores nominais por código de programa e exercício. O pago corresponde ao campo **Valor Pago Orçamentário**. Cada programa entra uma vez no total, com seu valor integral. O filtro de poder ou órgão usa a unidade responsável no PPAG, conferida com as unidades executoras do SIAFI. O vínculo é temático. Um mesmo programa pode estar associado a mais de um ODS, por isso a soma entre painéis pode contar o mesmo gasto mais de uma vez.
+
+```js
+if (saude) {
+  const series = await FileAttachment("./data/series-ods3.json").json();
+  const etiquetas = {
+    "6694": "Mortalidade materna",
+    "6695": "Mortalidade em menores de 5 anos",
+    "6696": "Mortalidade neonatal",
+    "8415": "Incidência de hepatite B"
+  };
+  display(html`<h2 id="indicadores">Indicadores de saúde</h2>
+    <p>Compare Minas Gerais e Brasil em quatro indicadores oficiais. Os períodos e as unidades variam por série.</p>`);
+  for (const serie of series) {
+    display(painelSerie(serie, etiquetas[serie.id], cor, resize));
+  }
+}
+```

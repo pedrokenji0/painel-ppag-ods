@@ -26,14 +26,18 @@ BASES = {
         "a6ebbe98-59b6-498f-9e27-106b88995dcf",
     ),
 }
-# Unidades responsáveis no PPAG e executoras no SIAFI para o recorte do ODS 1.
+# Unidades responsáveis no PPAG e executoras no SIAFI para os ODS 1 e 3.
 GRUPOS_POR_UO = {
     **dict.fromkeys(
-        ("1191", "1221", "1231", "1481", "2161", "2371", "2421", "2441",
-         "3041", "3051", "4111", "4251", "4701", "5201"),
+        ("1191", "1221", "1231", "1251", "1371", "1401", "1451", "1481", "1541",
+         "2011", "2091", "2121", "2161", "2261", "2271", "2321", "2331", "2371",
+         "2421", "2441", "3041", "3051", "4091", "4111", "4251", "4291", "4421",
+         "4601", "4701", "5201"),
         "Executivo",
     ),
     "1011": "Legislativo",
+    "2361": "Legislativo",
+    "4121": "Legislativo",
     "1031": "Judiciário",
     "1441": "Defensoria Pública",
     "4741": "Defensoria Pública",
@@ -67,10 +71,10 @@ def centavos(valores):
     return pd.to_numeric(valores, errors="raise").mul(100).round().astype("int64")
 
 
-def ler_vinculos(arquivo, aba, ano):
+def ler_vinculos(arquivo, aba, ano, ods):
     dados = pd.read_excel(arquivo, sheet_name=aba, dtype="string")
     ativos = dados["Exclusão Lógica do Programa"].str.strip().str.casefold().eq("não")
-    ods1 = dados["Título do Objetivo de Desenvolvimento Sustentável"].str.match(r"^1\s*-")
+    vinculados = dados["Título do Objetivo de Desenvolvimento Sustentável"].str.match(rf"^{ods}\s*-")
     colunas = {
         "Código do Programa": "codigo",
         "Nome do Programa": "nome",
@@ -78,7 +82,7 @@ def ler_vinculos(arquivo, aba, ano):
         "Código da Unidade Orçamentária Responsável pelo Programa": "uo",
         f"Previsão Orçamentária {ano}": "previsto",
     }
-    programas = dados.loc[ativos & ods1, list(colunas)].rename(columns=colunas)
+    programas = dados.loc[ativos & vinculados, list(colunas)].rename(columns=colunas)
     programas["codigo"] = programas["codigo"].str.strip().str.lstrip("0")
     if programas.empty or not programas["codigo"].str.fullmatch(r"\d+").fillna(False).all():
         raise ValueError(f"Vínculos vazios ou código de programa inválido em {arquivo.name}")
@@ -122,14 +126,12 @@ def ler_execucao(arquivo, ano, programas):
     return meses[-1], movimentos
 
 
-def preparar_execucao(origem, cache, atualizar):
+def preparar_execucao(origem, arquivos, ods):
     exercicios = []
-    for ano, (nome, aba, vinculos, dataset, recurso) in BASES.items():
-        programas = ler_vinculos(origem / nome, aba, ano)
+    for ano, (nome, aba, vinculos, _, recurso) in BASES.items():
+        programas = ler_vinculos(origem / nome, aba, ano, ods)
         fonte = f"{PORTAL}/dataset/dados-armazem-siafi-{ano}/resource/{recurso}"
-        url = f"{PORTAL}/dataset/{dataset}/resource/{recurso}/download/execucao.csv.gz"
-        arquivo = obter(url, cache / f"execucao-{ano}.csv.gz", atualizar)
-        ultimo_mes, movimentos = ler_execucao(arquivo, ano, programas)
+        ultimo_mes, movimentos = ler_execucao(arquivos[ano], ano, programas)
         codigos = set(movimentos.index.get_level_values(0))
         registros = programas.to_dict('records')
         for programa in registros:
@@ -187,19 +189,30 @@ def main():
     args = parser.parse_args()
     cache = RAIZ / ".dados"
     cache.mkdir(exist_ok=True)
-    execucao = preparar_execucao(args.origem, cache, args.atualizar)
+    arquivos = {
+        ano: obter(
+            f"{PORTAL}/dataset/{dataset}/resource/{recurso}/download/execucao.csv.gz",
+            cache / f"execucao-{ano}.csv.gz",
+            args.atualizar,
+        )
+        for ano, (*_, dataset, recurso) in BASES.items()
+    }
+    execucoes = {ods: preparar_execucao(args.origem, arquivos, ods) for ods in (1, 3)}
     pobreza = preparar_series(cache, args.atualizar, TABELAS_POBREZA)
     saude = preparar_series(cache, args.atualizar, TABELAS_SAUDE)
     destino = RAIZ / "src" / "data"
     destino.mkdir(parents=True, exist_ok=True)
-    for nome, dados in [("execucao-ods1", execucao), ("series-ods1", pobreza), ("series-ods3", saude)]:
+    recortes = {f"execucao-ods{ods}": dados for ods, dados in execucoes.items()}
+    recortes.update({"series-ods1": pobreza, "series-ods3": saude})
+    for nome, dados in recortes.items():
         (destino / f"{nome}.json").write_text(
             json.dumps(dados, ensure_ascii=False, allow_nan=False, separators=(",", ":")) + "\n",
             encoding="utf-8",
             newline="\n",
         )
-    for exercicio in execucao:
-        print(f"{exercicio['ano']}: {len(exercicio['programas'])} programas; mês {exercicio['ultimoMes']}")
+    for ods, exercicios in execucoes.items():
+        for exercicio in exercicios:
+            print(f"ODS {ods} · {exercicio['ano']}: {len(exercicio['programas'])} programas; mês {exercicio['ultimoMes']}")
 
 
 if __name__ == "__main__":
