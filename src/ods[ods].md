@@ -7,7 +7,7 @@ toc: false
 import * as Inputs from "@observablehq/inputs";
 import * as Plot from "@observablehq/plot";
 import {painelSerie} from "./series.js";
-import {metasEstaduais, metasMunicipais} from "./saude.js";
+import {escolhaMunicipal, metasEstaduais, metasMunicipais} from "./saude.js";
 
 const ods = observable.params.ods;
 const saude = ods === "3";
@@ -151,22 +151,24 @@ if (saude) {
 ```js
 const municipal = saude ? await FileAttachment("./data/saude-municipal.json").json() : null;
 const malha = saude ? await FileAttachment("./data/malha-mg.json").json() : null;
-const metaMunicipal = saude ? view(Inputs.radio(metasMunicipais, {
-  label: "Meta", value: metasMunicipais[1], format: (d) => `${d.codigo} · ${d.titulo}`
+const metaMunicipal = saude ? view(escolhaMunicipal(metasMunicipais, "metas", "Meta", {
+  value: metasMunicipais[1],
+  format: ({codigo, titulo, indicadores}) => html`<span class="meta-cartao">
+    <span class="meta-codigo">${codigo}</span><strong>${titulo}</strong>
+    <small>${indicadores.length} ${indicadores.length === 1 ? "indicador" : "indicadores"}</small>
+  </span>`
 })) : null;
 ```
 
 ```js
-const indicadorMunicipal = saude ? view(Inputs.select(metaMunicipal.indicadores, {
-  label: "Indicador", format: ([, nome]) => nome
+const indicadorMunicipal = saude ? view(escolhaMunicipal(metaMunicipal.indicadores, "indicadores", "Indicador", {
+  format: ([, nome]) => nome
 })) : null;
 ```
 
 ```js
 const serieMunicipal = saude ? municipal.series[indicadorMunicipal[0]] : null;
-const anoMunicipal = saude ? view(Inputs.select(Object.keys(serieMunicipal.anos).sort().reverse(), {
-  label: "Ano"
-})) : null;
+const anoMunicipal = saude ? view(escolhaMunicipal(Object.keys(serieMunicipal.anos).sort().reverse(), "anos", "Ano")) : null;
 ```
 
 ```js
