@@ -11,3 +11,4 @@ __pycache__/
 !/src/data/series-ods3.json
 !/src/data/malha-mg.json
 !/src/data/saude-municipal.json
+!/src/data/municipal-ods*.json

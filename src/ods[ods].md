@@ -8,7 +8,8 @@ import * as Inputs from "@observablehq/inputs";
 import * as Plot from "@observablehq/plot";
 import {seletorUnidade} from "./filtros.js";
 import {painelSerie} from "./series.js";
-import {escolhaMunicipal, metasEstaduais, metasMunicipais} from "./saude.js";
+import {metasEstaduais, metasMunicipais} from "./saude.js";
+import {escolhaMunicipal, escolhaMeta, painelMunicipal} from "./municipal.js";
 
 const ods = observable.params.ods;
 const saude = ods === "3";
@@ -33,7 +34,7 @@ display(html`<section class=${"hero ods" + ods + "-theme"}>
   <div class="hero-links">
     <a class="primary" href="#programas">Ver gastos por programa</a>
     <a href=${saude ? "#indicadores" : "./indicadores.html"}>${saude ? "Indicadores de saúde" : "Indicadores de pobreza"} →</a>
-    ${saude ? html`<a href="#mapa-municipal">Mapa municipal →</a>` : null}
+    <a href=${saude ? "#mapa-municipal" : "./municipal1.html"}>Mapa municipal →</a>
   </div></div>
   <img src=${icone} width="224" height="224" alt=${"ODS " + ods + " — " + objetivo}>
 </section>`);
@@ -154,13 +155,7 @@ if (saude) {
 ```js
 const municipal = saude ? await FileAttachment("./data/saude-municipal.json").json() : null;
 const malha = saude ? await FileAttachment("./data/malha-mg.json").json() : null;
-const metaMunicipal = saude ? view(escolhaMunicipal(metasMunicipais, "metas", "Meta", {
-  value: metasMunicipais[1],
-  format: ({codigo, titulo, indicadores}) => html`<span class="meta-cartao">
-    <span class="meta-codigo">${codigo}</span><strong>${titulo}</strong>
-    <small>${indicadores.length} ${indicadores.length === 1 ? "indicador" : "indicadores"}</small>
-  </span>`
-})) : null;
+const metaMunicipal = saude ? view(escolhaMeta(metasMunicipais, metasMunicipais[1])) : null;
 ```
 
 ```js
@@ -175,46 +170,9 @@ const anoMunicipal = saude ? view(escolhaMunicipal(Object.keys(serieMunicipal.an
 ```
 
 ```js
-if (saude) {
-  const valores = serieMunicipal.anos[anoMunicipal];
-  const maximo = Math.max(1, ...Object.values(serieMunicipal.anos).flatMap(Object.values));
-  const unidade = serieMunicipal.unidade;
-  const numero = new Intl.NumberFormat("pt-BR", {maximumFractionDigits: 2});
-  const formatar = (valor) => valor == null ? "Sem dado" : numero.format(valor) + (unidade === "%" ? "%" : "");
-  const municipios = municipal.municipios;
-  const linhas = Object.entries(municipios).sort((a, b) => a[1].localeCompare(b[1], "pt-BR"));
-  const [, etiqueta, motivo] = indicadorMunicipal;
-  display(html`<section class="panel mapa-saude">
-    <h4>${etiqueta} · ${anoMunicipal}</h4>
-    <p class="muted">${serieMunicipal.nome} · ${unidade}</p>
-    <p><strong>Por que acompanhar?</strong> ${motivo}</p>
-    <p class="coverage"><strong>${Object.keys(valores).length} de ${linhas.length} municípios com dado</strong>
-      · <span class="mapa-sem-dado" aria-hidden="true"></span> Cinza indica ausência de dado.</p>
-    ${resize((width) => Plot.plot({
-      width, height: Math.min(490, width * 0.83), margin: 6,
-      style: {fontFamily: "var(--sans-serif)", fontSize: 13},
-      ariaLabel: `${etiqueta} por município de Minas Gerais em ${anoMunicipal}`,
-      projection: {type: "mercator", domain: malha},
-      color: {
-        type: "linear", scheme: "greens", domain: [0, maximo], unknown: "#dbe3eb", legend: true, label: unidade,
-        style: {fontFamily: "var(--sans-serif)", fontSize: 13}, height: 56, marginTop: 24, marginLeft: 12, marginRight: 18
-      },
-      marks: [Plot.geo(malha, {
-        fill: (d) => valores[d.properties.codarea] ?? NaN,
-        stroke: "#fff", strokeWidth: 0.45,
-        title: (d) => `${municipios[d.properties.codarea]} · ${formatar(valores[d.properties.codarea])}`
-      })]
-    }))}
-    <details><summary>Ver valores por município</summary>
-      <div class="table-scroll" role="region" aria-label="Valores por município" tabindex="0"><table>
-        <thead><tr><th scope="col">Município</th><th scope="col">${anoMunicipal} · ${unidade}</th></tr></thead>
-        <tbody>${linhas.map(([codigo, nome]) => html`<tr><th scope="row">${nome}</th><td>${formatar(valores[codigo])}</td></tr>`)}</tbody>
-      </table></div>
-    </details>
-    <p class="muted">Fontes <a href="https://dados.fjp.mg.gov.br/consultas/">CIS/FJP</a> e
-      <a href="https://www.ibge.gov.br/geociencias/organizacao-do-territorio/malhas-territoriais/15774-malhas.html">malha municipal do IBGE</a>.</p>
-  </section>`);
-}
+if (saude) display(painelMunicipal(municipal, malha, serieMunicipal, indicadorMunicipal, anoMunicipal, resize, {
+  gradiente: "greens", escuro: cor
+}));
 ```
 
 ```js

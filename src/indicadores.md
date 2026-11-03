@@ -20,6 +20,8 @@ const etiquetas = {
   <p>Três séries do IBGE mostram a evolução de Minas Gerais e do Brasil pelos mesmos critérios.</p></div>
 </section>
 
+[Consultar o mapa municipal do ODS 1](./municipal1.html)
+
 ```js
 for (const serie of series) {
   display(painelSerie(serie, etiquetas[serie.id], "#c91f3c", resize));

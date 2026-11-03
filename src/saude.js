@@ -1,14 +1,3 @@
-import {radio} from "@observablehq/inputs";
-
-export function escolhaMunicipal(opcoes, tipo, titulo, {value = opcoes[0], format} = {}) {
-  const controle = radio(opcoes, {label: titulo, value, format});
-  controle.classList.add("escolha-municipal", `escolha-${tipo}`);
-  const grupo = controle.querySelector("div");
-  grupo.setAttribute("role", "radiogroup");
-  grupo.setAttribute("aria-label", titulo);
-  return controle;
-}
-
 export const metasMunicipais = [
   {codigo: "3.4", titulo: "Doenças crônicas", indicadores: [
     [601, "Mortalidade por doenças crônicas", "Mede mortes entre 30 e 69 anos e aproxima o foco da meta em mortalidade prematura."],
