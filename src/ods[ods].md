@@ -7,6 +7,7 @@ toc: false
 import * as Inputs from "@observablehq/inputs";
 import * as Plot from "@observablehq/plot";
 import {painelSerie} from "./series.js";
+import {metasEstaduais, metasMunicipais} from "./saude.js";
 
 const ods = observable.params.ods;
 const saude = ods === "3";
@@ -31,6 +32,7 @@ display(html`<section class=${"hero ods" + ods + "-theme"}>
   <div class="hero-links">
     <a class="primary" href="#programas">Ver gastos por programa</a>
     <a href=${saude ? "#indicadores" : "./indicadores.html"}>${saude ? "Indicadores de saúde" : "Indicadores de pobreza"} →</a>
+    ${saude ? html`<a href="#mapa-municipal">Mapa municipal →</a>` : null}
   </div></div>
   <img src=${icone} width="224" height="224" alt=${"ODS " + ods + " — " + objetivo}>
 </section>`);
@@ -137,17 +139,84 @@ Valores nominais por código de programa e exercício. O pago corresponde ao cam
 
 ```js
 if (saude) {
-  const series = await FileAttachment("./data/series-ods3.json").json();
-  const etiquetas = {
-    "6694": "Mortalidade materna",
-    "6695": "Mortalidade em menores de 5 anos",
-    "6696": "Mortalidade neonatal",
-    "8415": "Incidência de hepatite B"
-  };
   display(html`<h2 id="indicadores">Indicadores de saúde</h2>
-    <p>Compare Minas Gerais e Brasil em quatro indicadores oficiais. Os períodos e as unidades variam por série.</p>`);
-  for (const serie of series) {
-    display(painelSerie(serie, etiquetas[serie.id], cor, resize));
+    <p>O mapa usa indicadores locais do CIS/FJP vinculados às metas pela revisão de 2026.
+    As séries do IBGE/SIDRA comparam Minas Gerais e Brasil.</p>
+    <h3 id="mapa-municipal">Mapa municipal de Minas Gerais</h3>
+    <p>Escolha uma meta, um indicador e um ano. Os indicadores municipais têm aderência B na revisão do CIS
+    e ajudam a acompanhar aspectos das <a href="https://brasil.un.org/pt-br/sdgs/3">metas do ODS 3</a>.</p>`);
+}
+```
+
+```js
+const municipal = saude ? await FileAttachment("./data/saude-municipal.json").json() : null;
+const malha = saude ? await FileAttachment("./data/malha-mg.json").json() : null;
+const metaMunicipal = saude ? view(Inputs.radio(metasMunicipais, {
+  label: "Meta", value: metasMunicipais[1], format: (d) => `${d.codigo} · ${d.titulo}`
+})) : null;
+```
+
+```js
+const indicadorMunicipal = saude ? view(Inputs.select(metaMunicipal.indicadores, {
+  label: "Indicador", format: ([, nome]) => nome
+})) : null;
+```
+
+```js
+const serieMunicipal = saude ? municipal.series[indicadorMunicipal[0]] : null;
+const anoMunicipal = saude ? view(Inputs.select(Object.keys(serieMunicipal.anos).sort().reverse(), {
+  label: "Ano"
+})) : null;
+```
+
+```js
+if (saude) {
+  const valores = serieMunicipal.anos[anoMunicipal];
+  const maximo = Math.max(1, ...Object.values(serieMunicipal.anos).flatMap(Object.values));
+  const unidade = serieMunicipal.unidade;
+  const numero = new Intl.NumberFormat("pt-BR", {maximumFractionDigits: 2});
+  const formatar = (valor) => valor == null ? "Sem dado" : numero.format(valor) + (unidade === "%" ? "%" : "");
+  const municipios = municipal.municipios;
+  const linhas = Object.entries(municipios).sort((a, b) => a[1].localeCompare(b[1], "pt-BR"));
+  const [, etiqueta, motivo] = indicadorMunicipal;
+  display(html`<section class="panel mapa-saude">
+    <h4>${etiqueta} · ${anoMunicipal}</h4>
+    <p class="muted">${serieMunicipal.nome} · ${unidade}</p>
+    <p><strong>Por que acompanhar?</strong> ${motivo}</p>
+    <p class="coverage"><strong>${Object.keys(valores).length} de ${linhas.length} municípios com dado</strong>
+      · <span class="mapa-sem-dado" aria-hidden="true"></span> Cinza indica ausência de dado.</p>
+    ${resize((width) => Plot.plot({
+      width, height: Math.min(490, width * 0.83), margin: 6,
+      ariaLabel: `${etiqueta} por município de Minas Gerais em ${anoMunicipal}`,
+      projection: {type: "mercator", domain: malha},
+      color: {type: "linear", scheme: "greens", domain: [0, maximo], unknown: "#dbe3eb", legend: true, label: unidade},
+      marks: [Plot.geo(malha, {
+        fill: (d) => valores[d.properties.codarea] ?? NaN,
+        stroke: "#fff", strokeWidth: 0.45,
+        title: (d) => `${municipios[d.properties.codarea]} · ${formatar(valores[d.properties.codarea])}`
+      })]
+    }))}
+    <details><summary>Ver valores por município</summary>
+      <div class="table-scroll" role="region" aria-label="Valores por município" tabindex="0"><table>
+        <thead><tr><th scope="col">Município</th><th scope="col">${anoMunicipal} · ${unidade}</th></tr></thead>
+        <tbody>${linhas.map(([codigo, nome]) => html`<tr><th scope="row">${nome}</th><td>${formatar(valores[codigo])}</td></tr>`)}</tbody>
+      </table></div>
+    </details>
+    <p class="muted">Fontes <a href="https://dados.fjp.mg.gov.br/consultas/">CIS/FJP</a> e
+      <a href="https://www.ibge.gov.br/geociencias/organizacao-do-territorio/malhas-territoriais/15774-malhas.html">malha municipal do IBGE</a>.</p>
+  </section>`);
+}
+```
+
+```js
+if (saude) {
+  const series = await FileAttachment("./data/series-ods3.json").json();
+  display(html`<h3 id="series-estaduais">Séries de Minas Gerais e Brasil</h3>`);
+  for (const {codigo, titulo, indicadores} of metasEstaduais) {
+    display(html`<h4 class="meta-saude">Meta ${codigo} · ${titulo}</h4>`);
+    for (const [id, etiqueta, motivo] of indicadores) {
+      display(painelSerie(series.find((s) => s.id === id), etiqueta, cor, resize, motivo));
+    }
   }
 }
 ```

@@ -28,6 +28,8 @@ Acesse [localhost:8000](http://localhost:8000). O build usa os JSONs versionados
 
 ## Atualizar o recorte
 
+Para atualizar o mapa de saúde do ODS 3, rode `python scripts/preparar_saude_municipal.py`. O script baixa os indicadores selecionados do CIS/FJP desde 2020, valida os códigos municipais contra a malha simplificada do IBGE e atualiza os dois JSONs usados pelo mapa. A organização por meta segue a aba **SELECAO NUCLEO** da revisão CIS × ODS de 2026.
+
 Requer Python 3.11 ou superior. Passe a pasta com os dois Excel de vínculos. O script baixa os arquivos públicos do SIAFI e do SIDRA, valida os recortes e gera os JSONs de `src/data/`. Sem `--atualizar`, reaproveita downloads em `.dados/`.
 
 ```powershell

@@ -5,7 +5,7 @@ const territorios = ["Minas Gerais", "Brasil"];
 const proporcao = new Intl.NumberFormat("pt-BR", {style: "percent", maximumFractionDigits: 1});
 const taxa = new Intl.NumberFormat("pt-BR", {maximumFractionDigits: 2});
 
-export function painelSerie(serie, etiqueta, cor, resize) {
+export function painelSerie(serie, etiqueta, cor, resize, motivo) {
   const cores = [cor, "#536583"];
   const percentual = serie.unidade === "Proporção (%)";
   const formatar = (valor) => {
@@ -35,6 +35,7 @@ export function painelSerie(serie, etiqueta, cor, resize) {
     <p class="eyebrow">INDICADOR ${serie.indicador} · ${anos[0]}–${anos.at(-1)}</p>
     <h2>${etiqueta}</h2>
     <p class="muted">${serie.nome}${percentual ? "" : " · " + serie.unidade}</p>
+    ${motivo ? html`<p><strong>Por que acompanhar?</strong> ${motivo}</p>` : null}
     ${legenda}${grafico}
     <details><summary>Ver valores anuais</summary>
       <div class="table-scroll"><table>

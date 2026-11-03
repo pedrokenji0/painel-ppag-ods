@@ -127,6 +127,12 @@
 .section-hero p:last-child { margin-bottom: 0; }
 .section-hero img { width: clamp(60px, 15vw, 96px); height: auto; }
 .series-panel { margin-bottom: 1rem; }
+.mapa-saude { margin: 1rem 0 1.5rem; }
+.mapa-saude h4 { margin-top: 0; }
+.mapa-saude .table-scroll { max-height: 22rem; }
+.mapa-saude summary { cursor: pointer; font-weight: 650; }
+.mapa-sem-dado { display: inline-block; width: .75rem; height: .75rem; background: #dbe3eb; }
+.meta-saude { margin-top: 1.5rem; color: var(--accent-strong); }
 .series-panel details { margin-top: .7rem; }
 .series-panel summary { cursor: pointer; font-weight: 650; }
 .series-legend { display: flex; flex-wrap: wrap; gap: .45rem .95rem; padding: 0; list-style: none; font-size: .89rem; }

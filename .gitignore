@@ -9,3 +9,5 @@ __pycache__/
 !/src/data/execucao-ods3.json
 !/src/data/series-ods1.json
 !/src/data/series-ods3.json
+!/src/data/malha-mg.json
+!/src/data/saude-municipal.json
