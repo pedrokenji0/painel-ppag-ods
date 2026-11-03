@@ -1,0 +1,16 @@
+{
+  "name": "painel-ppag-ods",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "observable preview",
+    "build": "observable build"
+  },
+  "dependencies": {
+    "@observablehq/framework": "1.13.4",
+    "@observablehq/inputs": "0.12.0",
+    "@observablehq/plot": "0.6.17",
+    "d3-dsv": "3.0.1"
+  }
+}
