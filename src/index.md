@@ -30,7 +30,7 @@ O catálogo reúne os 17 objetivos globais e o ODS 18, iniciativa brasileira pel
 <ul class="ods-grid" aria-label="Objetivos de Desenvolvimento Sustentável">
   <li><a href="./ods1.html"><img src="./assets/ods1.png" alt="ODS 1 — Erradicação da pobreza"></a></li>
   <li><img src="./assets/ods2.png" alt="ODS 2 — Fome zero e agricultura sustentável"></li>
-  <li><img src="./assets/ods3.png" alt="ODS 3 — Saúde e bem-estar"></li>
+  <li><a href="./ods3.html"><img src="./assets/ods3.png" alt="ODS 3 — Saúde e bem-estar"></a></li>
   <li><img src="./assets/ods4.png" alt="ODS 4 — Educação de qualidade"></li>
   <li><img src="./assets/ods5.png" alt="ODS 5 — Igualdade de gênero"></li>
   <li><img src="./assets/ods6.png" alt="ODS 6 — Água potável e saneamento"></li>

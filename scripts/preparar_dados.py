@@ -1,4 +1,4 @@
-"""Gera os recortes do ODS 1 a partir do PPAG, SIAFI-MG e SIDRA."""
+"""Gera os recortes dos ODS 1 e 3 a partir do PPAG, SIAFI-MG e SIDRA."""
 import argparse
 import json
 from pathlib import Path
@@ -31,7 +31,13 @@ MEDIDAS = {
     "vlr_liquidado": "liquidado",
     "vlr_empenhado": "empenhado",
 }
-TABELAS = {"5817": "1.1.1", "5840": "1.1.1", "5877": "1.2.1"}
+TABELAS_POBREZA = {"5817": ("1.1.1", None), "5840": ("1.1.1", None), "5877": ("1.2.1", None)}
+TABELAS_SAUDE = {
+    "6694": ("3.1.1", "9730"),
+    "6695": ("3.2.1", "9731"),
+    "6696": ("3.2.2", "9732"),
+    "8415": ("3.3.4", "12381"),
+}
 
 
 def obter(url, caminho, atualizar):
@@ -123,12 +129,16 @@ def preparar_execucao(origem, cache, atualizar):
     return exercicios
 
 
-def preparar_series(cache, atualizar):
+def preparar_series(cache, atualizar, tabelas):
     series = []
-    for codigo, meta in TABELAS.items():
+    for codigo, (indicador, variavel) in tabelas.items():
         url = f"https://apisidra.ibge.gov.br/values/t/{codigo}/n1/1/n3/31/v/all/p/all"
         arquivo = obter(url, cache / f"sidra-{codigo}.json", atualizar)
         dados = pd.DataFrame(json.loads(arquivo.read_text(encoding="utf-8-sig"))[1:])
+        if variavel is not None:
+            dados = dados.loc[dados["D2C"].eq(variavel)]
+        if codigo == "8415":
+            dados = dados.loc[dados["D4C"].eq("95253")]  # Total dos grupos de idade
         if (set(dados["D1C"]) != {"1", "31"} or dados.duplicated(["D1C", "D3C"]).any()
                 or not dados["D3C"].str.fullmatch(r"\d{4}").all()
                 or dados["D2C"].nunique() != 1 or dados["MC"].nunique() != 1):
@@ -136,7 +146,7 @@ def preparar_series(cache, atualizar):
         valores = pd.to_numeric(dados["V"].replace({"..": None, "...": None, "-": 0}), errors="raise")
         series.append({
             "id": codigo,
-            "indicador": meta,
+            "indicador": indicador,
             "nome": dados["D2N"].iat[0],
             "unidade": dados["MN"].iat[0],
             "pontos": [
@@ -155,10 +165,11 @@ def main():
     cache = RAIZ / ".dados"
     cache.mkdir(exist_ok=True)
     execucao = preparar_execucao(args.origem, cache, args.atualizar)
-    series = preparar_series(cache, args.atualizar)
+    pobreza = preparar_series(cache, args.atualizar, TABELAS_POBREZA)
+    saude = preparar_series(cache, args.atualizar, TABELAS_SAUDE)
     destino = RAIZ / "src" / "data"
     destino.mkdir(parents=True, exist_ok=True)
-    for nome, dados in [("execucao-ods1", execucao), ("series-ods1", series)]:
+    for nome, dados in [("execucao-ods1", execucao), ("series-ods1", pobreza), ("series-ods3", saude)]:
         (destino / f"{nome}.json").write_text(
             json.dumps(dados, ensure_ascii=False, allow_nan=False, separators=(",", ":")) + "\n",
             encoding="utf-8",

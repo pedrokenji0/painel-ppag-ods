@@ -108,13 +108,13 @@
 .section-hero { display: flex; align-items: center; gap: 1.2rem; margin: .75rem 0 1.5rem; }
 .section-hero h1 { font-size: clamp(1.8rem, 4.5vw, 3.1rem); }
 .section-hero p:last-child { margin-bottom: 0; }
+.ods3-theme { --accent: #347536; }
 .section-hero img { width: clamp(60px, 15vw, 96px); height: auto; }
 .series-panel { margin-bottom: 1rem; }
 .series-panel details { margin-top: .7rem; }
 .series-panel summary { cursor: pointer; font-weight: 650; }
 .series-legend { display: flex; flex-wrap: wrap; gap: .45rem .95rem; padding: 0; list-style: none; font-size: .89rem; }
-.series-legend li span { display: inline-block; width: .65rem; height: .65rem; background: #c91f3c; margin-right: .3rem; border-radius: 100%; }
-.series-legend li:nth-child(2) span { background: #536583; }
+.series-legend li span { display: inline-block; width: .65rem; height: .65rem; margin-right: .3rem; border-radius: 100%; }
 .series-legend li:last-child { color: var(--theme-foreground-muted); }
 
 @media (max-width: 800px) {
