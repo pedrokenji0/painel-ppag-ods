@@ -18,7 +18,7 @@ const normalizar = (texto) => texto.normalize("NFD").replace(/\p{M}/gu, "").toLo
 const cor = "#c91f3c";
 ```
 
-<section class="hero">
+<section class="hero ods1-theme">
   <div><p class="eyebrow">MINAS GERAIS <span> / </span> AGENDA 2030</p>
   <h1>Erradicação<br>da pobreza</h1>
   <p>Execução orçamentária dos programas estaduais vinculados ao ODS 1.</p>

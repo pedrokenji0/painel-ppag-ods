@@ -18,7 +18,7 @@ const etiquetas = {
 const territorios = ["Minas Gerais", "Brasil"];
 ```
 
-<section class="section-hero">
+<section class="section-hero ods1-theme">
   <img src="./assets/ods1.png" width="96" height="96" alt="ODS 1 — Erradicação da pobreza">
   <div><p class="eyebrow">INDICADORES <span> / </span> ODS 1</p><h1>Pobreza em Minas Gerais</h1>
   <p>Três séries do IBGE mostram a evolução de Minas Gerais e do Brasil pelos mesmos critérios.</p></div>
