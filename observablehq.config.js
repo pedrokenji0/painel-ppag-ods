@@ -5,7 +5,7 @@ export default {
   preserveExtension: false,
   dynamicPaths: ["/ods1", "/ods3", "/municipal2", "/municipal6"],
   sidebar: false,
-  header: '<nav class="topbar" aria-label="Navegação principal"><a class="brand" href="./">PPAG <span>×</span> ODS <small>MINAS GERAIS</small></a><div><a href="./">Todos os ODS</a><a href="./ods1.html">ODS 1</a><a href="./ods1.html#indicadores">Pobreza</a></div></nav>',
+  header: '<nav class="topbar" aria-label="Navegação principal"><a class="brand" href="./">PPAG <span>×</span> ODS <small>MINAS GERAIS</small></a><div><a href="./">Todos os ODS</a><a href="./ods1">ODS 1</a><a href="./ods1#indicadores">Pobreza</a></div></nav>',
   pages: [
     {name: "ODS 1 · Execução orçamentária", path: "/ods1"},
     {name: "ODS 3 · Saúde e bem-estar", path: "/ods3"},
