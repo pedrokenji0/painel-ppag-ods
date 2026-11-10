@@ -19,7 +19,7 @@ const resumo = new Intl.NumberFormat("pt-BR", {
   <div class="hero-links"><a class="primary" href="#objetivos">Explorar objetivos</a></div></div>
   <aside class="catalog-feature"><p class="eyebrow">PRIMEIRO PAINEL · ODS 1</p>
     <strong>${resumo}</strong><p>pagos em ${base.ano} nos programas estaduais vinculados à erradicação da pobreza.</p>
-    <a href="./ods1.html">Ver execução e programas →</a>
+    <a href="./ods1">Ver execução e programas →</a>
   </aside>
 </section>
 
@@ -28,12 +28,12 @@ const resumo = new Intl.NumberFormat("pt-BR", {
 O catálogo reúne os 17 objetivos globais e o ODS 18, iniciativa brasileira pela igualdade étnico-racial.
 
 <ul class="ods-grid" aria-label="Objetivos de Desenvolvimento Sustentável">
-  <li><a href="./ods1.html"><img src="./assets/ods1.png" alt="ODS 1 — Erradicação da pobreza"></a></li>
-  <li><a href="./municipal2.html"><img src="./assets/ods2.png" alt="ODS 2 — Fome zero e agricultura sustentável"></a></li>
-  <li><a href="./ods3.html"><img src="./assets/ods3.png" alt="ODS 3 — Saúde e bem-estar"></a></li>
+  <li><a href="./ods1"><img src="./assets/ods1.png" alt="ODS 1 — Erradicação da pobreza"></a></li>
+  <li><a href="./municipal2"><img src="./assets/ods2.png" alt="ODS 2 — Fome zero e agricultura sustentável"></a></li>
+  <li><a href="./ods3"><img src="./assets/ods3.png" alt="ODS 3 — Saúde e bem-estar"></a></li>
   <li><img src="./assets/ods4.png" alt="ODS 4 — Educação de qualidade"></li>
   <li><img src="./assets/ods5.png" alt="ODS 5 — Igualdade de gênero"></li>
-  <li><a href="./municipal6.html"><img src="./assets/ods6.png" alt="ODS 6 — Água potável e saneamento"></a></li>
+  <li><a href="./municipal6"><img src="./assets/ods6.png" alt="ODS 6 — Água potável e saneamento"></a></li>
   <li><img src="./assets/ods7.png" alt="ODS 7 — Energia limpa e acessível"></li>
   <li><img src="./assets/ods8.png" alt="ODS 8 — Trabalho decente e crescimento econômico"></li>
   <li><img src="./assets/ods9.png" alt="ODS 9 — Indústria, inovação e infraestrutura"></li>
